@@ -13,8 +13,8 @@ Before following these steps you should have:
 ### 1. Clone the repository
 From your home directory on the VM:
 ```bash
-git clone git@github.com:emangrinder/2508_DS5111_.git
-cd 2508_DS5111_
+git clone git@github.com:Emangrinder/SoftAutoS26rym4hc.git
+cd SoftAutoS26rym4hc
 ```
 
 ### 2. Run the bootstrap script
