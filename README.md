@@ -1,26 +1,55 @@
-# SoftAutoS26rym4hc
+(2508_DS5111) SoftAutoS26rym4hc — VM Setup
 
-# AWS VM Bootstrap & Development Environment Setup
+This README walks a new user through getting a fresh VM ready to work on this project.
 
-This repository contains scripts and configurations to automate the provisioning of an Ubuntu Server 26.04 instance on AWS EC2, configure GitHub credentials, and establish a reproducible Python 3.14 development environment using a `makefile`.
+## Prerequisites / Starting point
 
-By automating this sequence, our development environment becomes completely ephemeral and fault-tolerant. If a cloud instance crashes, it can be cloned or recreated from scratch within minutes.
+Before following these steps you should have:
+- A fresh Ubuntu Server 26.04 VM that you can SSH into
+- A GitHub SSH key already set up on the VM (so `git clone` over SSH works)
 
----
+## Setup steps
 
-## 🚀 Quick Start / Setup Sequence
-
-### Prerequisites
-Before running the setup, ensure you meet the following baseline conditions:
-1. You have provisioned a fresh **Ubuntu Server 26.04** VM on AWS EC2.
-2. Your VM instance is named strictly following the convention: `<first_name>_<UVAID>` (e.g., `emmett_eh1234`).
-3. You have configured an SSH key on this VM that connects successfully to GitHub.
-
----
-
-### 1. Replicate & Initialize the Machine
-Run the base system setup to bring your package snapshots up to date and install critical system-level tools (`make`, `python3.14-venv`, and `tree`).
-
+### 1. Clone the repository
+From your home directory on the VM:
 ```bash
-# 1. Download or create your initialization script
-nano init.sh
+git clone git@github.com:emangrinder/2508_DS5111_.git
+cd 2508_DS5111_
+```
+
+### 2. Run the bootstrap script
+This updates apt and installs `make`, `python3.14-venv`, and `tree`:
+```bash
+cd scripts
+bash init.sh
+cd ..
+```
+**Quick test:** run `tree` from anywhere — if it lists files instead of throwing "command not found," it worked.
+
+### 3. Configure git credentials
+This tags your commits with the right email and username:
+```bash
+cd scripts
+bash init_git_creds.sh
+cd ..
+```
+**Quick test:** the script echoes the global git config before and after. You should see:
+- `user.email=emmett.hannam@gmail.com`
+- `user.name=emangrinder`
+
+### 4. Build the Python virtual environment
+From the repo root:
+```bash
+make update
+```
+This creates `env/`, upgrades pip, and installs everything in `requirements.txt`.
+
+**Quick test:**
+```bash
+. env/bin/activate
+pip list
+```
+You should see `(env)` in your prompt and `pandas` and `numpy` listed.
+
+## Summary
+After running the three commands above (`bash init.sh`, `bash init_git_creds.sh`, `make update`), the VM is ready for development.
