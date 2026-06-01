@@ -15,21 +15,28 @@ Character Set: Uses a modified Base64 encoding consisting of the following 64 po
     Underscore (_)
 """
 
+import string
 import sys
+
 
 def main():
     input_text = sys.stdin.read()
     words = input_text.split()
 
-    valids = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_"
+    CHAR_SET = string.ascii_uppercase + string.ascii_lowercase + string.digits + "-_"
+    CHAR_TO_INDEX = {char: idx for idx, char in enumerate(CHAR_SET)}
 
-    print(f"Processed {len(words)} words.")
     for word in words:
-        if len(word) == n word:
-            for letter in wor in valids:
-                if letter not in valid:
-                    continue
-        print(word)
+        if len(word) == 11:
+            is_valid = True  # Track if the word stays clean
+
+            for letter in word:
+                if letter not in CHAR_TO_INDEX:
+                    is_valid = False  # Found a bad character
+                    break  # Stop checking this word immediately
+
+            if is_valid:
+                print(word)  # Only prints once, and only if all letters passed
 
 
 if __name__ == "__main__":
