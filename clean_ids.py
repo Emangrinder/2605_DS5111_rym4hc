@@ -15,28 +15,33 @@ Character Set: Uses a modified Base64 encoding consisting of the following 64 po
     Underscore (_)
 """
 
+#!/usr/bin/env python3
+import logging
 import string
 import sys
 
+logging.basicConfig(
+    filename="pipeline_autid.log",
+    level=logging.INFO,
+    format="%(asctime)s - %(levelname)s - %(message)s",
+)
 
 def main():
-    input_text = sys.stdin.read()
-    words = input_text.split()
-
     CHAR_SET = string.ascii_uppercase + string.ascii_lowercase + string.digits + "-_"
-    CHAR_TO_INDEX = {char: idx for idx, char in enumerate(CHAR_SET)}
+    VALID_CHARS = set(CHAR_SET)
 
-    for word in words:
-        if len(word) == 11:
-            is_valid = True  # Track if the word stays clean
+    try:
+        for line in sys.stdin:
+            words = line.split()
 
-            for letter in word:
-                if letter not in CHAR_TO_INDEX:
-                    is_valid = False  # Found a bad character
-                    break  # Stop checking this word immediately
+            for word in words:
+                if len(word) == 11 and all(char in VALID_CHARS for char in word):
+                    print(word, flush=True)
+                else:
+                    logging.info(f"Invalid ID: {word}")
 
-            if is_valid:
-                print(word)  # Only prints once, and only if all letters passed
+    except KeyboardInterrupt:
+        sys.exit(0)
 
 
 if __name__ == "__main__":
