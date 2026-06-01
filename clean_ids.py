@@ -2,20 +2,15 @@
 # -*- coding: utf-8 -*-
 """
 Module Name: clean_ids.py
-Description: Filters non-urls
+Description: Filters youtube ids
 Author: Emmett Hannam (rym4hc)
 Date: 2026-06-01
 
-Length: Exactly 11 characters.
-Character Set: Uses a modified Base64 encoding consisting of the following 64 possibilities:
-    Uppercase letters (A-Z)
-    Lowercase letters (a-z)
-    Numbers (0-9)
-    Hyphen (-)
-    Underscore (_)
+Format
+    Length: Exactly 11
+    Character Set: (A-Z) (a-z) (0-9) (-) (_)
 """
 
-#!/usr/bin/env python3
 import logging
 import string
 import sys
