@@ -49,13 +49,13 @@ def test_script_io(monkeypatch, capsys):
 
     # Read and clean the answer file (handling potential double-newlines or extra whitespace)
     try:
-        with open("week2/weekly_youtube_ids_ans", "r", encoding="utf-8") as ans_file:
+        with open("week3/weekly_youtube_ids_ans", "r", encoding="utf-8") as ans_file:
             # Filter out empty lines to get a clean list of expected IDs
             expected_ids = [line.strip() for line in ans_file if line.strip()]
             # Reconstruct the target clean output format (one ID per line)
             expected_output = "\n".join(expected_ids) + "\n"
     except FileNotFoundError:
-        pytest.fail("The answer file ('week2/weekly_youtube_ids_ans') could not be found.")
+        pytest.fail("The answer file ('week3/weekly_youtube_ids_ans') could not be found.")
 
     # Strict assertion to verify the script output matches the answer key exactly
     assert actual_output == expected_output, (
