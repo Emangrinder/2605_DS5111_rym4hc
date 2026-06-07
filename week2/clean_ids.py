@@ -21,19 +21,21 @@ logging.basicConfig(
     format="%(asctime)s - %(levelname)s - %(message)s",
 )
 
+
 def main():
-    CHAR_SET = string.ascii_uppercase + string.ascii_lowercase + string.digits + "-_"
-    VALID_CHARS = set(CHAR_SET)
+    """Main function to test input validity to youtube id string requirements."""
+    char_set = string.ascii_uppercase + string.ascii_lowercase + string.digits + "-_"
+    valid_chars = set(char_set)
 
     try:
         for line in sys.stdin:
             words = line.split()
 
             for word in words:
-                if len(word) == 11 and all(char in VALID_CHARS for char in word):
+                if len(word) == 11 and all(char in valid_chars for char in word):
                     print(word, flush=True)
                 else:
-                    logging.info(f"Invalid ID: {word}")
+                    logging.info("Invalid ID: %s", word)
 
     except KeyboardInterrupt:
         sys.exit(0)
@@ -41,4 +43,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
