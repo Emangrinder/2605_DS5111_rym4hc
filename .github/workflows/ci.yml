@@ -22,7 +22,7 @@ jobs:
           pip install -r requirements.txt
 
       - name: Lint
-        run: pylint week2/clean_ids.py
+        run: pylint week2/clean_ids.py week4/extract_transcripts.py
 
       - name: Run tests
         run: pytest -vv tests
