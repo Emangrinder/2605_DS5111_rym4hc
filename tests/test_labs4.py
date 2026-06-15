@@ -75,3 +75,37 @@ def test_extract_transcripts_handles_unfetchable_id(monkeypatch, capsys):
     # 4. A failed fetch produces no JSON line on stdout.
     captured_output = capsys.readouterr()
     assert captured_output.out.strip() == ""
+
+
+def test_never_gonna_give_you_up(monkeypatch, capsys):
+    """🎵 Easter egg: a fully-offline rickroll for anyone who runs the suite.
+
+    Still a legit pipeline test (mocked, no network) -- it just happens to feed
+    the most well-known video ID on the internet.
+    """
+    rickroll_lyrics = [
+        {"start": 43.0, "text": "Never gonna give you up"},
+        {"start": 45.2, "text": "Never gonna let you down"},
+        {"start": 47.3, "text": "Never gonna run around and desert you"},
+    ]
+
+    class RickRollTranscript:
+        """Mock transcript container serving the classic."""
+
+        def to_raw_data(self):
+            return rickroll_lyrics
+
+    monkeypatch.setattr(
+        YouTubeTranscriptApi, "fetch", lambda self, video_id: RickRollTranscript()
+    )
+    monkeypatch.setattr(sys, "stdin", io.StringIO("dQw4w9WgXcQ\n"))
+
+    main()
+
+    captured = capsys.readouterr()
+    payload = json.loads(captured.out.strip())
+    assert payload["video_id"] == "dQw4w9WgXcQ"
+    assert "Never gonna give you up" in payload["raw_text"]
+
+    # Visible when run with `pytest -s`.
+    print("\n🎵 You just got rickrolled by your own test suite. Never gonna let you down. 🎵")
