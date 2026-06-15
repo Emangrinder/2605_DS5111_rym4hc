@@ -114,3 +114,46 @@ def test_feature_not_ready():
 def test_squared_values(input_val, expected_val):
     """10. Parametrized: each input squared equals the expected value."""
     assert input_val ** 2 == expected_val
+
+
+# --- Additional required tests (Lab 3, Part 2) -----------------------------
+
+def test_multiple_good_ids_interspersed_with_bad_lines(monkeypatch, capsys):
+    """Several valid IDs mixed with junk lines: only the valid IDs are emitted, in order."""
+    stdin_data = (
+        "kcFsuxaJ1es\n"   # valid (11 chars)
+        "this is junk\n"  # invalid: three short words
+        "CctJNYYCPo0\n"   # valid (11 chars)
+        "1234\n"          # invalid: too short
+        "dQw4w9WgXcQ\n"   # valid (11 chars)
+    )
+    monkeypatch.setattr(sys, "stdin", io.StringIO(stdin_data))
+
+    main()
+
+    captured = capsys.readouterr()
+    assert captured.out == "kcFsuxaJ1es\nCctJNYYCPo0\ndQw4w9WgXcQ\n"
+
+
+@pytest.mark.parametrize("bad_id", [
+    "abcdefghij",    # 10 chars -> too short
+    "abcdefghijkl",  # 12 chars -> too long
+])
+def test_ids_outside_length_range_are_rejected(bad_id, monkeypatch, capsys):
+    """Only IDs of exactly 11 chars are valid; 10- and 12-char IDs must be dropped."""
+    monkeypatch.setattr(sys, "stdin", io.StringIO(bad_id + "\n"))
+
+    main()
+
+    captured = capsys.readouterr()
+    assert captured.out == "", f"Expected no output for length-{len(bad_id)} id, got {captured.out!r}"
+
+
+def test_exactly_eleven_chars_passes_length_check(monkeypatch, capsys):
+    """Boundary: an ID of exactly 11 valid characters is accepted."""
+    monkeypatch.setattr(sys, "stdin", io.StringIO("abcdefghijk\n"))
+
+    main()
+
+    captured = capsys.readouterr()
+    assert captured.out == "abcdefghijk\n"
