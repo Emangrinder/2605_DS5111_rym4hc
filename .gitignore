@@ -1,0 +1,18 @@
+# Secrets
+.env
+
+# Python caches / compiled files
+__pycache__/
+*.py[cod]
+
+# Virtual environments
+env/
+venv/
+.venv/
+
+# Pytest
+.pytest_cache/
+
+# Generated pipeline audit logs
+pipeline/logs/
+*.log
