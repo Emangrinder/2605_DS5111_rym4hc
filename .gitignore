@@ -16,3 +16,6 @@ venv/
 # Generated pipeline audit logs
 pipeline/logs/
 *.log
+
+# Lab 5 audit logs
+logs/
