@@ -17,6 +17,7 @@ from abc import ABC, abstractmethod
 from dotenv import load_dotenv
 from google import genai
 from google.genai import types
+from lib.pipeline_logging import configure_pipeline_logging
 
 # Conditionally load credentials from a local .env file if one is present.
 load_dotenv()
@@ -24,13 +25,7 @@ load_dotenv()
 # Direct logging statements to a shared audit log asset. Ensure the directory
 # exists first so simply importing this module never fails (e.g. under CI,
 # where logs/ does not exist yet).
-LOG_DIR = "logs"
-os.makedirs(LOG_DIR, exist_ok=True)
-logging.basicConfig(
-    filename=os.path.join(LOG_DIR, "pipeline_audit.log"),
-    level=logging.INFO,
-    format="%(asctime)s - %(levelname)s - %(message)s",
-)
+configure_pipeline_logging()
 
 class LLMStrategy (ABC): # pylint: disable=too-few-public-methods
     """Abstract contract for LLM enrichment strategies."""
