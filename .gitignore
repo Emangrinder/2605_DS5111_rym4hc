@@ -218,3 +218,7 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# Un-ignore this project's own lib/ (holds business-logic modules, not build artifacts)
+!/lib/
+!/lib/**
