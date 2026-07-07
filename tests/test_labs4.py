@@ -11,10 +11,10 @@ import json
 from youtube_transcript_api import YouTubeTranscriptApi
 
 # Import the executable main entry point loop from your pipeline package directory.
-from bin.extract_transcripts import main
+from week4.extract_transcripts import main
 
 
-class MockTranscriptContainer: # pylint: disable=too-few-public-methods
+class MockTranscriptContainer:
     """Mimics the 2026 .to_raw_data() array output return schema."""
 
     def to_raw_data(self):
@@ -89,11 +89,10 @@ def test_never_gonna_give_you_up(monkeypatch, capsys):
         {"start": 47.3, "text": "Never gonna run around and desert you"},
     ]
 
-    class RickRollTranscript: # pylint: disable=too-few-public-methods
+    class RickRollTranscript:
         """Mock transcript container serving the classic."""
 
         def to_raw_data(self):
-            """Return the rickroll lyrics as raw transcript chunks."""
             return rickroll_lyrics
 
     monkeypatch.setattr(

@@ -13,10 +13,10 @@ import sys
 
 import pytest
 
-from bin.clean_ids import main
+from week2.clean_ids import main
 
 
-def load_youtube_ids_from_file(file_path="tests/fixtures/weekly_youtube_ids"):
+def load_youtube_ids_from_file(file_path="week2/weekly_youtube_ids"):
     """Read IDs from a file and return them as a single newline-separated string."""
     try:
         with open(file_path, "r", encoding="utf-8") as file:
@@ -49,7 +49,7 @@ def test_script_execution(monkeypatch, capsys):
 def test_script_io(monkeypatch, capsys):
     """Live input file should clean to exactly match the answer key."""
     # 5. Load live file data via the helper.
-    file_data = load_youtube_ids_from_file("tests/fixtures/weekly_youtube_ids")
+    file_data = load_youtube_ids_from_file("week2/weekly_youtube_ids")
     if not file_data.strip():
         pytest.fail("The 'weekly_youtube_ids' file is missing or empty.")
 
@@ -63,11 +63,11 @@ def test_script_io(monkeypatch, capsys):
 
     # Read and clean the answer file (handling extra whitespace / blank lines).
     try:
-        with open("tests/fixtures/weekly_youtube_ids_ans", "r", encoding="utf-8") as ans_file:
+        with open("week3/weekly_youtube_ids_ans", "r", encoding="utf-8") as ans_file:
             expected_ids = [line.strip() for line in ans_file if line.strip()]
             expected_output = "\n".join(expected_ids) + "\n"
     except FileNotFoundError:
-        pytest.fail("The answer file ('tests/fixtures/weekly_youtube_ids_ans') could not be found.")
+        pytest.fail("The answer file ('week3/weekly_youtube_ids_ans') could not be found.")
 
     # Strict comparison: script output must match the answer key exactly.
     assert actual_output == expected_output, (
@@ -97,7 +97,7 @@ def test_check_python_version():
 @pytest.mark.xfail(reason="This feature is not yet built")
 def test_expected_to_fail():
     """8. Known-failing assertion; pytest reports it as XFAIL."""
-    assert 1 == 2 # pylint: disable=comparison-of-constants
+    assert 1 == 2
 
 
 @pytest.mark.skip(reason="Feature is not ready yet")
@@ -146,9 +146,8 @@ def test_ids_outside_length_range_are_rejected(bad_id, monkeypatch, capsys):
     main()
 
     captured = capsys.readouterr()
-    assert captured.out == "", (
-       f"Expected no output for length-{len(bad_id)} id, got {captured.out!r}"
-    )
+    assert captured.out == "", f"Expected no output for length-{len(bad_id)} id, got {captured.out!r}"
+
 
 def test_exactly_eleven_chars_passes_length_check(monkeypatch, capsys):
     """Boundary: an ID of exactly 11 valid characters is accepted."""

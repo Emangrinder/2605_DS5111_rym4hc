@@ -1,25 +1,17 @@
-ENV = env
-PYTHON = $(ENV)/bin/python3
-PIP = $(ENV)/bin/pip
-export PYTHONPATH := .
-
 default:
 	@cat makefile
 
-env:
-	python3 -m venv $(ENV)
-	$(PIP) install --upgrade pip
-
-update: env
-	$(PIP) install -r requirements.txt
-
 lint:
-	$(PYTHON) -m pylint bin/ lib/ tests/
+	pylint week2/clean_ids.py && pylint week4/extract_transcripts.py && pylint week5/enrich_transcripts.py
 
 test:
-	$(PYTHON) -m pytest -vv tests
-run:
-	@echo "Usage: make run STAGE=extract|enrich"
-	$(PYTHON) bin/$(STAGE)_transcripts.py
+	make lint && pytest -vv tests
+
+env:
+	python3 -m venv env; . env/bin/activate; pip install --upgrade pip
+
+update:  env
+	. env/bin/activate; pip install -r requirements.txt
+
 test_enrich:
-	@cat mock_transcripts.jsonl | $(PYTHON) bin/enrich_transcripts.py | $(PYTHON) bin/validate_schema.py
+	@. env/bin/activate && cat mock_transcripts.jsonl | python -u week5/enrich_transcripts.py | python week5/validate_schema.py
