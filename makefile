@@ -1,6 +1,7 @@
 ENV = env
 PYTHON = $(ENV)/bin/python3
 PIP = $(ENV)/bin/pip
+export PYTHONPATH := .
 
 default:
 	@cat makefile
@@ -17,10 +18,8 @@ lint:
 
 test:
 	$(PYTHON) -m pytest -vv tests
-
 run:
 	@echo "Usage: make run STAGE=extract|enrich"
 	$(PYTHON) bin/$(STAGE)_transcripts.py
-
 test_enrich:
 	@cat mock_transcripts.jsonl | $(PYTHON) bin/enrich_transcripts.py | $(PYTHON) bin/validate_schema.py
