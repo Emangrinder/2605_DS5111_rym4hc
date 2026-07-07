@@ -54,8 +54,24 @@ class GeminiStrategy(LLMStrategy):  # pylint: disable=too-few-public-methods
         }
 
     def enrich(self, video_id: str, raw_text: str) -> dict:
-        """Not yet implemented — next step."""
-        raise NotImplementedError
+        """Send raw transcript text to Gemini and return the enriched schema dict."""
+        prompt = f"""
+            You are an elite data engineer. Clean this transcript text for video_id '{video_id}'.
+            1. Strip all timestamps and duration codes.
+            2. Extract technical architecture terms and books.
+            """
+        try:
+            response = self.client.models.generate_content(
+                model="gemini-2.5-flash",
+                contents=f"{prompt}\n\nTRANSCRIPT:\n{raw_text}",
+                config=types.GenerateContentConfig(
+                    response_mime_type="application/json",
+                    response_schema=self.response_schema,
+                ),
+            )
+            return json.loads(response.text)
+        except Exception as exc:  # pylint: disable=broad-exception-caught
+            raise RuntimeError(f"Gemini enrichment failed for {video_id}: {exc}") from exc
 
 def main():
     """Stream JSONL transcripts from stdin to Gemini-enriched JSONL on stdout."""
