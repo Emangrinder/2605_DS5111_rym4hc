@@ -31,6 +31,31 @@ logging.basicConfig(
     format="%(asctime)s - %(levelname)s - %(message)s",
 )
 
+class LLMStrategy (ABC): # pylint: disable=too-few-public-methods
+    """Abstract contract for LLM enrichment strategies."""
+    @abstractmethod
+    def enrich(self, video_id: str, raw_text: str) -> dict:
+        """Must accept raw transcript text and return an enriched schema dict."""
+
+class GeminiStrategy(LLMStrategy):  # pylint: disable=too-few-public-methods
+    """Concrete LLMStrategy that enriches transcripts via Google Gemini."""
+
+    def __init__(self, api_key: str):
+        self.client = genai.Client(api_key=api_key)
+        self.response_schema = {
+            "type": "OBJECT",
+            "properties": {
+                "video_id": {"type": "STRING"},
+                "cleaned_text": {"type": "STRING"},
+                "tech_terms": {"type": "ARRAY", "items": {"type": "STRING"}},
+                "book_names": {"type": "ARRAY", "items": {"type": "STRING"}},
+            },
+            "required": ["video_id", "cleaned_text", "tech_terms", "book_names"],
+        }
+
+    def enrich(self, video_id: str, raw_text: str) -> dict:
+        """Not yet implemented — next step."""
+        raise NotImplementedError
 
 def main():
     """Stream JSONL transcripts from stdin to Gemini-enriched JSONL on stdout."""
@@ -99,13 +124,6 @@ def main():
             )
 
     logging.info("Pipeline Step 2B finished.")
-
-
-class LLMStrategy(ABC): # pylint: disable=too-few-public-methods
-    """Abstract contract for LLM enrichment strategies."""
-    @abstractmethod
-    def enrich(self, video_id: str, raw_text: str) -> dict:
-        """Must accept raw transcript text and return an enriched schema dict."""
 
 if __name__ == "__main__":
     main()
