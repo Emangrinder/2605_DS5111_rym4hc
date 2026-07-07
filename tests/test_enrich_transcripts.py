@@ -4,14 +4,23 @@ import json
 
 import pytest
 
-from week5.enrich_transcripts import main
+from week5.enrich_transcripts import main, TranscriptEnricher, LLMStrategy
 
+class MockLLMStrategy(LLMStrategy):  # pylint: disable=too-few-public-methods
+    """Test double for LLMStrategy — returns a canned response, no network calls."""
+
+    def enrich(self, video_id: str, raw_text: str) -> dict:
+        return {
+            "video_id": video_id,
+            "cleaned_text": raw_text.strip().lower(),
+            "tech_terms": ["mock_term"],
+            "book_names": ["Mock Book"],
+        }
 
 # 1. Build a dummy container mimicking the Gemini SDK response hierarchy
 class MockGeminiResponse:
     def __init__(self, text_payload):
         self.text = text_payload
-
 
 def test_enrich_transcripts_streaming_pipeline(monkeypatch, capsys):
     """
@@ -43,7 +52,7 @@ def test_enrich_transcripts_streaming_pipeline(monkeypatch, capsys):
     monkeypatch.setattr(sys, "stdin", mock_stdin)
 
     # 4. Trigger the main pipeline script execution loop
-    main()
+    main(argv=[])
 
     # 5. Intercept the standard console text buffers
     captured = capsys.readouterr()
@@ -54,3 +63,18 @@ def test_enrich_transcripts_streaming_pipeline(monkeypatch, capsys):
     parsed_output = json.loads(stdout_lines[0])
     assert parsed_output["video_id"] == "ds5111_v001"
     assert "mock frameworks" in parsed_output["tech_terms"]
+
+def test_transcript_enricher_with_mock_strategy(monkeypatch, capsys):
+    """Verifies TranscriptEnricher processes stdin/stdout correctly using a
+    dummy strategy — no live network calls, no SDK involved."""
+    mock_input_row = {"video_id": "test_v001", "raw_text": "  RAW transcript text  "}
+    mock_stdin = io.StringIO(json.dumps(mock_input_row) + "\n")
+    monkeypatch.setattr(sys, "stdin", mock_stdin)
+
+    enricher = TranscriptEnricher(MockLLMStrategy())
+    enricher.run_stream()
+
+    captured = capsys.readouterr()
+    parsed_output = json.loads(captured.out.strip())
+    assert parsed_output["video_id"] == "test_v001"
+    assert parsed_output["tech_terms"] == ["mock_term"]

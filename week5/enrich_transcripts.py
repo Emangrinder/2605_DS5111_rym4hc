@@ -101,7 +101,7 @@ class TranscriptEnricher: # pylint: disable=too-few-public-methods
             except RuntimeError as exc:
                 logging.error(str(exc))
 
-def main():
+def main(argv=None):
     """Wire the argparse-selected LLMStrategy into the enrichment pipeline."""
     logging.info("Pipeline Step 2B (Enrichment) started.")
 
@@ -112,7 +112,7 @@ def main():
         default="gemini",
         help="Target LLM vendor strategy (Defaults to gemini).",
     )
-    args = parser.parse_args()
+    args = parser.parse_args(argv)
 
     api_key = os.getenv("GEMINI_API_KEY")
     if not api_key:
