@@ -12,6 +12,7 @@ import os
 import json
 import logging
 
+from abc import ABC, abstractmethod
 from dotenv import load_dotenv
 from google import genai
 from google.genai import types
@@ -99,6 +100,12 @@ def main():
 
     logging.info("Pipeline Step 2B finished.")
 
+
+class LLMStrategy(ABC): # pylint: disable=too-few-public-methods
+    """Abstract contract for LLM enrichment strategies."""
+    @abstractmethod
+    def enrich(self, video_id: str, raw_text: str) -> dict:
+        """Must accept raw transcript text and return an enriched schema dict."""
 
 if __name__ == "__main__":
     main()
