@@ -5,10 +5,13 @@ import json
 import logging
 import snowflake.connector
 from dotenv import load_dotenv  # <-- Added to support standard .env loading
-from lib.pipeline_logging import configure_pipeline_logging
 
 # Establish clean centralized diagnostic logging metrics output footprint
-configure_pipeline_logging(log_dir='pipeline/logs', log_file='pipeline_audit.log')
+logging.basicConfig(
+    filename='pipeline/logs/pipeline_audit.log',
+    level=logging.INFO,
+    format='%(asctime)s - %(levelname)s - %(message)s'
+)
 
 
 def main():
