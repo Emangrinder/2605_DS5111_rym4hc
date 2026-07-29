@@ -1,0 +1,13 @@
+default:
+  target: dev
+  outputs:
+    dev:
+      type: snowflake
+      # Account and User are ignored natively, but required by dbt core
+      account: "native_execution" 
+      user: "native_execution"
+      role: DS5111_STUDENT_ROLE
+      database: DS5111_DB
+      schema: RYM4HC  # <-- Replace with your actual computing ID
+      warehouse: ds5111_wh # <-- Replace with your assigned warehouse
+

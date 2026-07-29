@@ -222,3 +222,5 @@ __marimo__/
 # Un-ignore this project's own lib/ (holds business-logic modules, not build artifacts)
 !/lib/
 !/lib/**
+.env.bak
+.env
