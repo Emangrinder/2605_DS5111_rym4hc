@@ -9,5 +9,5 @@ SELECT
     JSON_PAYLOAD:book_names AS BOOK_NAMES_ARRAY,
     INSERTED_AT
 -- raw_transcripts is a lowest-level raw source table, NOT a dbt model,
--- so it stays a plain FROM reference rather than {{ ref() }}
+-- so it stays a plain FROM reference rather than ref()
 FROM raw_transcripts
