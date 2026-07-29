@@ -23,3 +23,7 @@ run:
 	$(PYTHON) bin/$(STAGE)_transcripts.py
 test_enrich:
 	@cat mock_transcripts.jsonl | $(PYTHON) bin/enrich_transcripts.py | $(PYTHON) bin/validate_schema.py
+.PHONY: load
+load:
+	@echo "Initiating Cloud Data Warehouse Synchronizer Node..."
+	cat mock_transcripts.jsonl | python bin/load_snowflake.py

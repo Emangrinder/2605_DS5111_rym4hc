@@ -1,7 +1,6 @@
-pandas
-numpy
-pylint
-pytest
-youtube-transcript-api
+snowflake-connector-python
 python-dotenv
+pytest
+pylint
 google-genai
+youtube-transcript-api
